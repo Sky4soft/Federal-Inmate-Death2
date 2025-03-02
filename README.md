@@ -79,6 +79,9 @@ git clone https://github.com/Sky4soft/Federal-Inmate-Deaths.git
 ## Licensing
 This project is licensed under the MIT License. See the [`LICENSE`](LICENSE) file for details.
 
+# Contact
+For questions or feedback, please contact the repository owner through GitHub.
+
 ## Code
  All code for cleaning, analysis, and visualization is written using **[Malloy](https://malloydata.github.io/)** and available in the `notebooks/` and `scripts/` directories. 
 
