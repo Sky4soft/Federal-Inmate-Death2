@@ -48,6 +48,7 @@ To ensure reliable analysis, the following cleaning steps were performed:
 This project leverages **Malloy** for querying and analyzing the data. Various visualizations, including **bar charts, line graphs, and scatter plots**, are used to enhance data interpretation.  
 
 This data shows the yearly trends in deaths from Cancer, Liver, Pulmonary, and Unknown causes across different cities and countries.
+
 <img src="./Images/Trend.png">
 
 This data shows the annual distribution of deaths for Cancer, Pulmonary, and Liver categories, and compares these deaths as a percentage of all deaths over the years.
@@ -83,7 +84,7 @@ Clone the repository:
 git clone https://github.com/Sky4soft/Federal-Inmate-Deaths.git
 cd Federal-Inmate-Deaths
 
-## Licensing
+Licensing
 This project is licensed under the MIT License.
 Please see the LICENSE file for details.
 
