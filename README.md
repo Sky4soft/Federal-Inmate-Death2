@@ -10,7 +10,7 @@ Underatanding the causes and patterns of inmate deaths is essential for:
 - Supporting transparency and accountability within federal institutions.
 - Providing insights for policymakers and advocacy groups focused on prison reform.
 
-## summary of Findings
+## Summary of Findings
 After analyzing the dataset, several key insights emerged:
 - **Cardiac-related deaths** are the most common cause.
 - The highest number of deaths occurred during the **COVID-19 pandemic (2020)**.
@@ -52,20 +52,21 @@ This data shows the yearly trends in deaths from Cancer, Liver, Pulmonary, and U
 <img src="./Images/Trend.png">
 
 This data shows the annual distribution of deaths for Cancer, Pulmonary, and Liver categories, and compares these deaths as a percentage of all deaths over the years.
+
 <img src="./Images/Deathdata.png">
 <img src="./Images/Death.png">
 
-
 This data shows that cardiac-related deaths are the highest among all categories.
+
 <img src="./Images/Numberdate.png">
 <img src="./Images/Number.png">
 
-
-
 this graph shows that the most common causes of death for male inmates since 2005, broken down by race.
+
 <img src="./Images/Race.png">
 
 This graph shows the total deaths for each death category (e.g., Cancer, Cardiac) across all genders.
+
 <img src="./Images/Register.png">
 
 ## Getting Started   
@@ -74,6 +75,9 @@ git clone https://github.com/Sky4soft/Federal-Inmate-Deaths.git
 2. Install Malloy and any required dependencies.
 3. Load the dataset files into your environment.
 4. Run provided Malloy scripts to reproduce the analysis.
+   
+## Licensing
+This project is licensed under the MIT License. See the [`LICENSE`](LICENSE) file for details.
 
 ## Code
  All code for cleaning, analysis, and visualization is written using **[Malloy](https://malloydata.github.io/)** and available in the `notebooks/` and `scripts/` directories. 
@@ -83,8 +87,4 @@ Clone the repository:
 ```sh
 git clone https://github.com/Sky4soft/Federal-Inmate-Deaths.git
 cd Federal-Inmate-Deaths
-
-Licensing
-This project is licensed under the MIT License.
-Please see the LICENSE file for details.
 
