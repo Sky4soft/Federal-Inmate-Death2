@@ -1,0 +1,736 @@
+>>>malloy
+source: categories is duckdb.table('categories.csv') extend {
+    primary_key: icd_code
+}
+
+source: categories2 is duckdb.table('categories.csv') extend {
+    primary_key: icd_code
+}
+
+source: UpdatedICD is duckdb.table('WhereTOGo.csv') extend {
+    primary_key: City_Code
+
+}
+
+source: Place is duckdb.table('LocationsPlace.csv') extend {
+    primary_key: Location_Code
+    measure: Numb_Cities is count(Location_Code)
+}
+
+source: prison_deaths is duckdb.table('prison.csv') extend {
+    
+measure: total_deaths is count()
+measure: total_records is count()
+measure: total_cancer_deaths is count() {where: DeathCategory = 'Cancer'}
+measure: total_liver_deaths is count() {where: DeathCategory = 'Liver'}
+measure: total_hanging_deaths is count() {where: DeathCategory = 'Hanging'}
+measure: total_drugoverdose_deaths is count() {where: DeathCategory = 'Drug Overdose'}
+measure: total_unkown is count() {where: DeathCategory = 'Unknown'}
+measure: total_cardiac_deaths is count() {where: DeathCategory = 'Cardiac'}
+measure: total_pulmonary_deaths is count() {where: DeathCategory = 'Pulmonary'}
+measure: total_other_deaths is count() {where: DeathCategory = 'Other'}
+measure: Numb_deaths is count(RegisterNum)
+measure: deaths_by_race is count() 
+measure: deaths_by_sex is count() 
+measure: deaths_by_year is count() 
+
+dimension: 
+  ICD10P is replace(`ICD10 Prime`,",","")
+  ICD10S is replace(`ICD10 Second`,",","")
+  join_one: categories with ICD10P
+  join_one: categories2 with ICD10S
+
+
+join_one: Place with InstID
+join_one: UpdatedICD with InstID
+dimension: Last_Name is `NameLast`
+
+}
+>>>markdown
+### 1.What is the annual distribution of deaths for Cancer, Pulmonary, and Liver categories, and how do these deaths compare as a percentage of all deaths over the years?
+
+
+DOD is Date of Death.
+>>>malloy
+# dashboard
+run: prison_deaths -> {
+  group_by: yearly is DOD.year
+  aggregate: Numb_deaths 
+  # percent
+    percent_of_all_deaths is total_deaths / all(total_deaths)
+  group_by: DeathCategory
+  where: DeathCategory = 'Cancer'| 'Liver'| 'Pulmonary'| 'Unknown'
+}
+# line_chart
+run: prison_deaths -> {
+  group_by: yearly is DOD.year
+  aggregate: Numb_deaths 
+  # percent
+    percent_of_all_deaths is total_deaths / all(total_deaths)
+  group_by: DeathCategory
+  where: DeathCategory = 'Cancer'| 'Liver'| 'Pulmonary'| 'Unknown'
+}
+>>>markdown
+#### 2. What are the yearly trends in deaths for Cancer, Liver, Pulmonary, and Unknown causes across different cities and countries?
+
+   FYI: DOD is Date of Death.
+>>>malloy
+# dashboard
+run: prison_deaths -> {
+  group_by: yearly is DOD.year
+  group_by: UpdatedICD.City
+  group_by: UpdatedICD.Airport_CountryIATA
+  aggregate: Numb_deaths 
+  # percent
+    percent_of_all_deaths is total_deaths / all(total_deaths)
+  group_by: DeathCategory
+  where: DeathCategory = 'Cancer'| 'Liver'| 'Pulmonary'| 'Unknown'
+}
+
+--# line_chart
+# bar_chart
+run: prison_deaths -> {
+  group_by: yearly is DOD.year
+  group_by: UpdatedICD.City
+  group_by: UpdatedICD.Airport_CountryIATA
+  aggregate: Numb_deaths 
+  # percent
+    percent_of_all_deaths is total_deaths / all(total_deaths)
+  group_by: DeathCategory
+  where: DeathCategory = 'Cancer'| 'Liver'| 'Pulmonary'| 'Unknown'
+}
+>>>markdown
+### 3. Which death categories have the highest number of deaths?
+>>>markdown
+This data shows that cardiac-related deaths are the highest among all categories.
+>>>malloy
+# bar_chart
+run: prison_deaths-> {
+    group_by: DeathCategory, Last_Name, categories.icd_code, categories.icd_description
+    aggregate: total_deaths 
+    top: 10
+}
+>>>markdown
+### 4. Which race has the highest number of recorded deaths?
+>>>malloy
+--# dashboard
+run: prison_deaths -> {
+     
+  group_by: Race, categories.icd_code, categories.icd_description
+     
+  aggregate: DeathCategory is count()
+    
+  --limit: 100
+}
+# bar_chart {size =lg}
+run: prison_deaths -> {
+     
+  group_by: Race, categories.icd_code, categories.icd_description
+     
+  aggregate: DeathCategory is count()
+    
+  --limit: 100
+}
+>>>markdown
+### 5. What are the total deaths for each death category (e.g., Cancer, Cardiac) across all genders?
+>>>malloy
+# bar_chart
+run: prison_deaths-> {
+  
+  group_by: DeathCategory
+    aggregate: 
+   RegisterNum is count ()
+    nest: gender is {
+      group_by: Sex
+  aggregate: 
+   RegisterNum is count ()
+  --limit: 20
+}
+}
+>>>markdown
+### 6. What are the most common causes of death for male inmates since 2005, broken down by race?
+>>>malloy
+--#line_chart
+--# bar_chart {size=lg}
+# bar_chart {stack size=sm}
+run: prison_deaths-> {
+  where: Sex = 'Male'
+  where: DOD >@2005
+  group_by: DeathCategory
+  group_by: DOD
+  group_by: Race 
+    
+  aggregate: 
+   total_deaths 
+  
+}
+>>>markdown
+### 7. What percentage of all deaths does each death category represent?
+>>>malloy
+# dashboard
+--# bar_chart
+run: prison_deaths-> {
+group_by: DeathCategory
+aggregate: 
+    total_deaths  
+  # percent
+  persent_of_all_deaths is total_deaths / all(total_deaths)
+  nest: by_cattegory is {
+    group_by: Race, Sex
+    aggregate: total_deaths
+      # percent
+      persent_of_all_deaths is total_deaths / all(total_deaths)
+  }
+      
+  }
+>>>markdown
+### 8. Which years saw the lowest number of deaths in specific categories?
+
+Additionally, identify the months and quarters with the lowest number of deaths in specific categories.
+>>>malloy
+run: prison_deaths -> {
+  group_by: DOD.year, DeathCategory
+  aggregate: total_records
+  order_by: total_records asc
+}
+run: prison_deaths -> {
+  group_by: DOD.month, DeathCategory
+  aggregate: total_records
+  order_by: total_records asc
+}
+run: prison_deaths -> {
+  group_by: DOD.quarter, DeathCategory
+  aggregate: total_records
+  order_by: total_records asc
+}
+# bar_chart {size =sm}
+run: prison_deaths -> {
+  group_by: DOD.year, DeathCategory
+  aggregate: total_records
+  order_by: total_records desc
+}
+>>>markdown
+### 9. What are the top 10 death categories and their gender breakdowns?
+>>>malloy
+run: prison_deaths -> {
+  
+  group_by: DeathCategory
+  aggregate: total_deaths
+  top: 10
+  # bar_chart.size=sm
+  nest: `by_category` is {
+    group_by: Sex
+    aggregate: total_deaths
+  }
+
+}
+run: prison_deaths -> {
+  
+  group_by: DeathCategory
+  aggregate: total_deaths
+  top: 10
+  # bar_chart {y.independent}
+  nest: `by_category` is {
+    group_by: Sex
+    aggregate: total_deaths
+  }
+
+}
+>>>markdown
+### 10. How do mortality patterns differ between male and female inmates across different causes of death?
+>>>malloy
+
+run: prison_deaths -> {
+  group_by: categories.icd_code, categories.icd_description, Race, Sex
+            
+  aggregate: Last_Name is count()
+  
+}
+>>>markdown
+### 11. How do different death categories (e.g., Cancer, Cardiac, Drug Overdose) compare in frequency?
+>>>malloy
+# bar_chart {size =sm}
+run: prison_deaths -> {
+  group_by: categories.icd_code, categories.icd_description, DeathCategory
+  
+  aggregate: RegisterNum is count ()
+}
+>>>markdown
+### 12. Are certain causes of death (ICD-10 codes) more common in specific institutions?
+>>>malloy
+run: prison_deaths-> {
+    group_by: InstID, categories.icd_code, categories.icd_description
+        
+    aggregate: RegisterNum is count()
+    --limit: 30
+}
+--# bar_chart
+run: prison_deaths-> {
+    group_by: InstID, categories.icd_code, categories.icd_description
+        
+    aggregate: RegisterNum is count()
+    --limit: 30
+}
+>>>markdown
+### 13. What is the range of death years (from the earliest to the latest year of death)?
+>>>malloy
+run: prison_deaths-> {
+    group_by: categories.icd_code, categories.icd_description
+    aggregate: DeathCategory is count()
+    total_rows is count()
+    max_year is max(DOD)
+    min_year is min(DOD)
+}
+>>>markdown
+### 14. What are the trends in the number of deaths over time for male inmates?
+>>>malloy
+
+run: prison_deaths-> {
+  where: Sex = 'Male'
+  where: DOD >@2005
+  group_by: DeathCategory
+  group_by: DOD
+  group_by: Race 
+    
+  aggregate: 
+   total_deaths 
+  
+}
+# bar_chart {size =sm}
+
+run: prison_deaths-> {
+  where: Sex = 'Male'
+  where: DOD >@2005
+  group_by: DeathCategory
+  group_by: DOD
+  group_by: Race 
+    
+  aggregate: 
+   total_deaths 
+  
+}
+>>>markdown
+### 15. Are there patterns in how deaths are distributed across different ICD-10 codes?
+>>>malloy
+run: prison_deaths -> {
+  group_by:
+    Last_Name, categories.icd_code, categories.icd_description
+  aggregate: total_deaths 
+    
+  --limit: 10
+}
+>>>markdown
+### 16. How did inmate deaths fluctuate across the weeks of 2020?
+>>>malloy
+
+--# line_chat
+run: prison_deaths-> {
+    group_by: DOD.week
+    aggregate: total_deaths 
+    limit: 1000000
+    where: DOD.year = @2020
+    
+    
+nest: by_cattegory is {
+    group_by:DeathCategory
+    
+    
+        limit: 9
+    }
+}
+>>>markdown
+### 17. what is percent of total death by gender
+>>>malloy
+
+run: prison_deaths-> {
+    group_by: Sex
+    aggregate: total_deaths
+    # percent
+    percent_of_all_deaths is total_deaths / all(total_deaths)
+    nest: by_cattegory is {
+        group_by:DeathCategory
+        
+    
+        limit: 9
+    }
+}
+--# line_chart
+run: prison_deaths-> {
+    group_by: Sex
+    aggregate: total_deaths
+    # percent
+    percent_of_all_deaths is total_deaths / all(total_deaths)
+    # percent
+    percent_of_total_record is total_deaths / all(total_deaths)
+    # percent
+    percent_of_total_cancer is total_deaths / all(total_deaths)
+    nest: by_cattegory is {
+        group_by:DeathCategory
+        
+    
+        limit: 9
+    }
+}
+>>>markdown
+### 18. Which causes of death show the greatest variation across different racial groups?
+>>>malloy
+--# bar_chart {size =lg}
+# line_chart
+run: prison_deaths -> {
+  group_by: categories.icd_code, categories.icd_description, Race, Sex
+            
+  aggregate: total_deaths 
+  
+}
+>>>markdown
+### 19. What is the overall distribution of death categories between male and female inmates?
+>>>malloy
+run: prison_deaths -> {
+  group_by: categories.icd_code, categories.icd_description, Sex
+  aggregate: DeathCategory is count()
+}
+# bar_chart {size =lg}
+run: prison_deaths -> {
+  group_by: categories.icd_code, categories.icd_description, Sex
+  aggregate: DeathCategory is count()
+}
+>>>markdown
+### 20. Which races have the highest number of deaths in each death category per year?
+>>>malloy
+run: prison_deaths -> {
+  group_by: DOD.year, DeathCategory, Race
+  aggregate: deaths_by_race 
+  order_by: deaths_by_race asc
+}
+>>>markdown
+### 21. What are the trends in male vs. female deaths across different death categories and causes over the years?
+>>>malloy
+run: prison_deaths -> {
+  group_by: DOD.year, DeathCategory, Sex, categories.icd_code, categories.icd_description
+  aggregate: deaths_by_sex 
+  order_by: deaths_by_sex asc
+}
+>>>markdown
+### 22. How have deaths in different categories changed over the years?
+>>>malloy
+run: prison_deaths -> {
+  group_by: DOD.year, DeathCategory
+  aggregate: deaths_by_year 
+  order_by: deaths_by_year asc
+}
+>>>markdown
+### 23. How have cancer-related deaths changed over the years across different death categories, races, and sexes?
+>>>malloy
+run: prison_deaths -> {
+  group_by: DOD.year, DeathCategory, RegisterNum, Race, Sex
+  aggregate: total_cancer_deaths 
+  order_by: total_cancer_deaths asc
+}
+>>>markdown
+### 24. How have cardiac-related deaths changed over the years across different death categories, races, and sexes?
+>>>malloy
+run: prison_deaths -> {
+  group_by: DOD.year, DeathCategory, RegisterNum, Race, Sex
+  aggregate: total_cardiac_deaths 
+  order_by: total_cardiac_deaths asc
+}
+>>>markdown
+### 25. Are there any noticeable disparities in pulmonary death rates based on race and sex over time?
+>>>malloy
+run: prison_deaths -> {
+  group_by: DOD.year, DeathCategory, RegisterNum, Race, Sex
+  aggregate: total_pulmonary_deaths 
+  order_by: total_pulmonary_deaths asc
+}
+>>>markdown
+### 26. Which death categories have the highest number of pulmonary deaths each year, broken down by race and sex?
+>>>malloy
+run: prison_deaths -> {
+  group_by: DOD.year, DeathCategory, RegisterNum, Race, Sex
+  aggregate: total_pulmonary_deaths 
+  order_by: total_pulmonary_deaths asc
+}
+>>>markdown
+### 27. What are the predominant death categories associated with liver deaths?
+>>>malloy
+run: prison_deaths -> {
+  group_by: DOD.year, DeathCategory, RegisterNum, categories.icd_code, categories.icd_description, Race, Sex
+  aggregate: total_liver_deaths 
+  order_by: total_liver_deaths desc
+}
+>>>markdown
+### 28. How do hanging deaths correlate with different death categories over the years (e.g., suicide, accidental, etc.)?
+>>>malloy
+run: prison_deaths -> {
+  group_by: DOD.year, DeathCategory, RegisterNum, categories.icd_code, categories.icd_description, Race, Sex
+  aggregate: total_hanging_deaths 
+  order_by: total_hanging_deaths desc
+}
+>>>markdown
+### 29. Which racial group or sex has the highest number of drug overdose deaths, and does this trend shift over time?
+>>>malloy
+run: prison_deaths -> {
+  group_by: DOD.year, DeathCategory, RegisterNum, categories.icd_code, categories.icd_description, Race, Sex
+  aggregate: total_drugoverdose_deaths 
+  order_by: total_drugoverdose_deaths desc
+}
+>>>markdown
+### 30. Is there any pattern or trend in the number of unknown cause deaths across different death categories (e.g., accidental, cardiac)?
+>>>malloy
+run: prison_deaths -> {
+  group_by: DOD.year, DeathCategory, RegisterNum, categories.icd_code, categories.icd_description, Race, Sex
+  aggregate: total_unkown 
+  order_by: total_unkown desc
+}
+>>>markdown
+### 31. How do the deaths related to different ICD-10 codes vary across sex, race, and year?
+>>>malloy
+run: prison_deaths -> {
+  group_by: ICD10P, categories.icd_code, categories.icd_description
+  aggregate: death_count is count()
+  order_by: death_count desc
+}
+>>>markdown
+### 32. What is the distribution of death categories (e.g., cancer, cardiac, pulmonary) by year for the prison population?
+>>>malloy
+run: prison_deaths -> {
+  group_by: DOD.year, DeathCategory, RegisterNum, Race, Sex
+  aggregate: total_records is count()
+  order_by: total_records asc
+}
+>>>markdown
+### 33. Are there any significant racial disparities in prison deaths?
+>>>malloy
+run: prison_deaths -> {
+  group_by: categories.icd_code, categories.icd_description, Sex, Race
+  aggregate: total_deaths is count()
+  
+}
+>>>markdown
+### 34. Are there specific death categories that disproportionately affect certain races?
+>>>malloy
+run: prison_deaths -> {
+  group_by: Race, Sex, DeathCategory
+  aggregate: total_deaths is count()
+}
+# bar_chart
+--# line_chart
+run: prison_deaths -> {
+  group_by: Race, Sex, DeathCategory
+  aggregate: total_deaths is count()
+}
+>>>markdown
+### 35. Which institutions have the highest number of recorded deaths?
+>>>malloy
+// InstID: Assigned institution/facility (represented via BOP’s standard three-letter codes)
+
+run: prison_deaths -> {
+  group_by: InstID
+  aggregate: total_deaths is count()           
+}            
+>>>markdown
+### 36. How many deaths have occurred for each DeathCategory since 2009?
+>>>malloy
+run: prison_deaths -> {
+  where: DOD >= @2009
+  group_by: DeathCategory
+  aggregate: total_deaths 
+}
+# bar_chart
+run: prison_deaths -> {
+  where: DOD >= @2009
+  group_by: DeathCategory
+  aggregate: total_deaths 
+}
+>>>markdown
+### 37. How does the distribution of deaths by DeathCategory compare before and after 2008?
+>>>markdown
+Add a tooltip to a visualization 
+Tooltip customized by tagging additional aggregates.
+>>>malloy
+run: prison_deaths -> {
+  where: DOD >= @2008
+  group_by: DeathCategory
+  aggregate: total_deaths is count()
+  # bar_chart {size =lg}
+  nest: by_cattegory is {
+    group_by: Race, Sex
+    aggregate: total_cancer_deaths
+  }
+  
+}
+# bar_chart
+run: prison_deaths -> {
+  
+  group_by: DeathCategory
+  aggregate: total_deaths is count()
+  # tooltip bar_chart.size=xs
+  nest: by_cattegory is {
+    group_by: Race, Sex
+    aggregate: total_cancer_deaths
+  }
+  # tooltip
+    nest: categories.icd_code, categories.icd_description 
+    group_by: Sex
+    aggregate: total_cardiac_deaths,total_liver_deaths, deaths_by_race
+    order_by: deaths_by_race
+  
+
+}
+>>>markdown
+### 38. Are certain death categories more prevalent among specific races or sexes?
+>>>markdown
+Understanding data:
+ICD10 Prime: ICD-10 code for the primary cause of death, or “UNK”
+ICD10 Second: ICD-10 code for the secondary cause of death, or “UNK”
+InstID: Assigned institution/facility (represented via BOP’s standard three-letter codes)
+>>>malloy
+run: prison_deaths -> {
+  
+  group_by: RegisterNum, Last_Name, Sex, Race, DOD, InstID, ICD10P, ICD10S
+  group_by: DeathCategory
+  aggregate: total_deaths
+
+}
+>>>markdown
+### 39.How are deaths distributed across different institutions and location codes?
+>>>malloy
+run: prison_deaths -> {
+    group_by: InstID
+    group_by: Place.Location_Code
+}
+>>>markdown
+### 40. Can you visualize the breakdown of deaths by category, with a specific focus on last names and races for the top 10 records?
+>>>markdown
+add a dashboard layout
+a dashboard typically refers to a visualization setup where multiple queries, charts, or tables are displayed together to provide insights.
+A dashboard makes it easier to understand data results by visually organizing key insights using charts, graphs, and tables instead of just raw numbers. It helps users quickly analyze trends, compare metrics, and make data-driven decisions.
+>>>malloy
+# dashboard
+run: prison_deaths -> {
+  
+  group_by: DeathCategory, RegisterNum, Sex
+  aggregate: total_deaths
+  top: 10
+  # bar_chart {y.independent}
+  nest: `by_category` is {
+    group_by: Last_Name, Race
+    aggregate: total_deaths
+  }
+}
+>>>markdown
+### 41. What are the top 10 deaths by category, sex, and last name?
+>>>malloy
+
+run: prison_deaths -> {
+  
+  group_by: DeathCategory, Sex, Last_Name
+  aggregate: total_deaths
+  top: 10
+  # bar_chart.size=sm
+  nest: `by_category` is {
+    group_by: Race
+    aggregate: total_cancer_deaths
+  }
+}
+>>>markdown
+### 42. How are cardiac-related deaths distributed across different death categories, race, and sex?
+>>>markdown
+Remove the green dash and click Run to see the visualization scatter chart.
+>>>malloy
+--# scatter_chart
+run: prison_deaths -> {
+  group_by: DeathCategory, Race, Sex
+  aggregate: total_cardiac_deaths
+  
+}
+>>>markdown
+### 43. Do specific institutions have a pattern of deaths related to a particular category (e.g., suicides, drug overdoses)?
+>>>markdown
+add a dashboard layout.
+Understanding the Data:
+InstID: Assigned institution/facility (represented via BOP’s standard three-letter codes)
+>>>malloy
+# dashboard
+run: prison_deaths -> {
+  group_by: DOD.year, DeathCategory, Race, Sex
+  aggregate: total_records is count()
+  order_by: total_records desc
+
+  # bar_chart {x: DOD.year, y: total_records, color: DeathCategory}
+
+ nest: by_institution is {
+    group_by: InstID
+    aggregate: total_deaths is count()
+    order_by: total_deaths desc
+  }
+}
+>>>markdown
+### 44. Which ICD10 codes show a rising trend over time? Could this indicate worsening health conditions in prisons?
+>>>markdown
+Understanding the Data:
+ICD10 Prime: ICD-10 code for the primary cause of death, or “UNK”
+ICD10 Second: ICD-10 code for the secondary cause of death, or “UNK”
+>>>malloy
+# dashboard
+run: prison_deaths -> {
+  group_by: DOD.year, DeathCategory, Race, Sex, categories.icd_code, categories.icd_description
+  aggregate: total_records is count()
+  order_by: total_records desc
+
+# bar_chart {x: ICD10P, y: total_icd_deaths, color: ICD10S}
+nest: by_icd_codes is {
+    group_by: ICD10P, ICD10S
+    aggregate: total_icd_deaths is count()
+    order_by: total_icd_deaths desc
+  }
+}
+>>>markdown
+### 45. What is the time range of recorded prison deaths?
+>>>markdown
+The dataset includes prison deaths recorded from the earliest date, January 1, 2005, to the latest date, August 9, 2024.
+>>>malloy
+run: prison_deaths -> {
+  
+  aggregate: Startdate is min(DOD), Enddate is max(DOD)
+}
+
+  
+>>>markdown
+### 46. In 2024, the number of deaths was 235. During the COVID-19 period in 2020, the number of deaths peaked at 561.
+>>>malloy
+run: prison_deaths -> {
+  group_by: DOD.year 
+  aggregate: Numb_deaths 
+}
+>>>markdown
+### 47.How do death trends for specific ICD-10 categories change over time?
+
+a tooltip generally refers to additional information displayed when hovering over a data visualization element (e.g., bars in a bar chart or points in a scatter plot). Tooltips provide contextual details about the data point, such as values, labels, or calculated metrics.
+Adding a tooltip enhances visualization and makes understanding easier than just displaying data with numbers.
+>>>malloy
+run: prison_deaths-> {
+    group_by: categories.icd_code, categories.icd_description  
+    aggregate: total_deaths 
+
+    
+    nest: deathby is {
+        group_by: categories2.icd_description
+        aggregate: total_deaths 
+    }
+}
+# bar_chart {size =lg}
+run: prison_deaths-> {
+    group_by: categories.icd_code, categories.icd_description  
+    aggregate: total_deaths 
+
+   # tooltip bar_chart.size=lg
+    nest: deathby is {
+        group_by: categories2.icd_description
+        aggregate: total_deaths 
+    }
+     nest: gender is {
+        group_by: Sex
+        aggregate: RegisterNum is count ()
+     }
+}
