@@ -47,7 +47,7 @@ To ensure reliable analysis, the following cleaning steps were performed:
 ## Visualizations & Analysis  
 This project leverages **Malloy** for querying and analyzing the data. Various visualizations, including **bar charts, line graphs, and scatter plots**, are used to enhance data interpretation.  
 
-This data shows the yearly trends in deaths from Cancer, Liver, Pulmonary, and Unknown causes across different cities and countries.
+This graph shows the yearly trends in deaths from Cancer, Liver, Pulmonary, and Unknown causes across different cities and countries.
 
 <img src="./Images/Trend.png">
 
@@ -61,7 +61,7 @@ This data shows that cardiac-related deaths are the highest among all categories
 <img src="./Images/Numberdate.png">
 <img src="./Images/Number.png">
 
-this graph shows that the most common causes of death for male inmates since 2005, broken down by race.
+This graph shows that the most common causes of death for male inmates since 2005, broken down by race.
 
 <img src="./Images/Race.png">
 
