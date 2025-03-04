@@ -45,6 +45,21 @@ To ensure reliable analysis, the following cleaning steps were performed:
 - Filled missing categories with `"Unknown"` to maintain data consistency.
 - Filtered out invalid entries or duplicates in the dataset.
 
+# How to Open a Shared GitHub File and Run Malloy Code
+To explore the data and run the analyses:
+
+Click on the (https://github.com/Sky4soft/Federal-Inmate-Death2) provided to access the shared repository or file. 
+
+Once on Github, click Shift + period this will load the web editor. Then install the malloy extension. See images below for reference:
+
+| **Step**   | **Image Preview** |
+|--------|-----------|
+| `Step 1 - Press allow` | <img src="./images/step1.png" width="50%"> |
+| `Step 2 - Click the Blocks, search for Malloy, install` | <img src="./images/step2.png" width="50%"> |
+| `Step 3 - Click Trust` | <img src="./images/step3.png" width="50%"> |
+| `Step 4 - Click a .malloynb file` | <img src="./images/step4.png" width="50%"> |
+| `Step 5 - Press Run` | <img src="./images/step5.png" width="50%"> |
+
 ## Key Questions Explored  
 - What are the most common causes of death in federal prisons?  
 - Are certain causes of death more prevalent in specific locations or institutions?  
