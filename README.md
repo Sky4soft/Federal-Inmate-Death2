@@ -54,11 +54,11 @@ Once on Github, click Shift + period this will load the web editor. Then install
 
 | **Step**   | **Image Preview** |
 |--------|-----------|
-| `Step 1 - Press allow` | <img src="./images/step1.png" width="50%"> |
-| `Step 2 - Click the Blocks, search for Malloy, install` | <img src="./images/step2.png" width="50%"> |
-| `Step 3 - Click Trust` | <img src="./images/step3.png" width="50%"> |
-| `Step 4 - Click a .malloynb file` | <img src="./images/step4.png" width="50%"> |
-| `Step 5 - Press Run` | <img src="./images/step5.png" width="50%"> |
+| `Step 1 - Press allow` | <img src="./Images/step1.png" width="50%"> |
+| `Step 2 - Click the Blocks, search for Malloy, install` | <img src="./Images/step2.png" width="50%"> |
+| `Step 3 - Click Trust` | <img src="./Images/step3.png" width="50%"> |
+| `Step 4 - Click a .malloynb file` | <img src="./Images/step4.png" width="50%"> |
+| `Step 5 - Press Run` | <img src="./Images/step5.png" width="50%"> |
 
 ## Key Questions Explored  
 - What are the most common causes of death in federal prisons?  
