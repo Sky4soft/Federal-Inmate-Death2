@@ -1,7 +1,7 @@
 # Federal Inmate Deaths Analysis
 
 ## Background
-This repository contains datasets and analysis related to **Federal Inmate Deaths**, sourced from the [Data Liberation Project](https://www.data-liberation-project.org/), via a [Freedom of Information Act request](https://www.data-liberation-project.org/requests/ssvf-satisfaction-surveys/) to the US Department of Veterans Affairs (VA) and pre-processed by the Data Liberation Project. The goal of this project is to explore patterns and trends in inmate deaths within the federal prison system, analyzing factors such as **death categories, demographic distributions, and geographic trends**.
+This repository contains data obtained by the [Data Liberation Project](https://www.data-liberation-project.org/), via a [Freedom of Information Act request](https://www.data-liberation-project.org/requests/ssvf-satisfaction-surveys/) to the US Department of Veterans Affairs (VA) and pre-processed by the Data Liberation Project. The goal of this project is to explore patterns and trends in inmate deaths within the federal prison system, analyzing factors such as **death categories, demographic distributions, and geographic trends**.
 
 ## FOIA Records
 The records provided by the VA by the Data Liberation Project can be viewed [HERE](https://docs.google.com/spreadsheets/d/1VyoVX2PEQXSaUJ9dNTvJ36HNBE5tGLcy/edit?gid=1808560422#gid=1808560422).
