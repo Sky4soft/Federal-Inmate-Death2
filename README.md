@@ -45,7 +45,7 @@ To ensure reliable analysis, the following cleaning steps were performed:
 - Filled missing categories with `"Unknown"` to maintain data consistency.
 - Filtered out invalid entries or duplicates in the dataset.
 
-# How to Open a Shared GitHub File and Run Malloy Code
+## How to Open a Shared GitHub File and Run Malloy Code
 To explore the data and run the analyses:
 
 Click on the (https://github.com/Sky4soft/Federal-Inmate-Death2) provided to access the shared repository or file. 
