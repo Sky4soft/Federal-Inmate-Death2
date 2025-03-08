@@ -33,7 +33,7 @@ measure: Numb_deaths is count(RegisterNum)
 measure: deaths_by_race is count() 
 measure: deaths_by_sex is count() 
 measure: deaths_by_year is count() 
-
+measure: deaths_per_facility is count()
 dimension: 
   ICD10P is replace(`ICD10 Prime`,",","")
   ICD10S is replace(`ICD10 Second`,",","")
@@ -47,20 +47,50 @@ dimension: Last_Name is `NameLast`
 
 }
 >>>markdown
+###. Grouping by key demographic and death-related attributes
+>>>malloy
+run: prison_deaths -> {
+   
+  nest: `Grouping by key demographic and death-related attributes: This dataset summarizes inmate deaths by cause, race, and sex, highlighting significant health trends within the federal prison system. Cancer (1,081 deaths) and cardiac conditions (936 deaths) are the leading causes of death, particularly among White male inmates. Black males also show high mortality from cardiac issues (677 deaths) and cancer (534 deaths). Pulmonary diseases and liver conditions account for a notable number of deaths, with White and Black males being the most affected. Additionally, hanging (197 deaths among White males) suggests suicide is a concerning factor. These findings emphasize the healthcare challenges and risk factors contributing to inmate mortality.` is {
+      group_by: `Death` is DeathCategory, Race, Sex
+      aggregate: total_deaths 
+      limit:10
+  }
+}
+>>>markdown
+###. This dataset provides insights into federal inmate deaths by institution, cause, and year, highlighting the facilities with the highest mortality rates and the most common causes of death. BUH (1,840 deaths) recorded the highest number of deaths, followed by SPG (578) and DEV (322), suggesting that certain institutions house higher-risk or terminally ill inmates. The leading causes of death include cardiac arrest (I46 - 344 deaths), liver cancer (C22 - 159 deaths), and colon cancer (C18 - 143 deaths). Suicide by hanging (X70 - 180 deaths) and COVID-19 (U07.1 - 266 deaths) also account for a significant portion of deaths. The presence of 477 deaths with unknown ICD-10 classifications (UNK) indicates possible gaps in cause-of-death reporting. This data underscores the health risks, chronic conditions, and systemic challenges contributing to mortality in the federal prison system.
+>>>malloy
+run: prison_deaths -> {
+  
+  nest: `By_Institution` is {
+    group_by: InstID
+    aggregate: deaths_per_facility 
+    order_by: deaths_per_facility desc
+    limit: 10
+  }
+
+  nest: `By_Cause` is {
+    group_by: ICD10P, ICD10S, categories.icd_code, categories.icd_description
+    aggregate: deaths_by_icd is count()
+    order_by: deaths_by_icd desc
+    limit: 10
+  }
+
+  nest: `By_Year` is {
+    group_by: DOD.year
+    aggregate: yearly_deaths is count()
+    order_by: yearly_deaths desc
+    limit: 10
+  }
+}
+>>>markdown
 ### 1.What is the annual distribution of deaths for Cancer, Pulmonary, and Liver categories, and how do these deaths compare as a percentage of all deaths over the years?
 
 
 DOD is Date of Death.
+>>>markdown
+###. This graph illustrates yearly inmate deaths from 2012 to 2023, categorized by Pulmonary, Cancer, Liver, and Unknown causes. Cancer-related deaths consistently remain the highest, followed by Pulmonary and Liver diseases, indicating that chronic illnesses are major contributors to inmate mortality. A significant spike in deaths occurred in 2020, likely due to COVID-19 and other health complications. The Unknown category suggests gaps in medical reporting or classification. Overall, the data highlights long-term health challenges in the prison system, emphasizing the need for improved medical care and disease prevention strategies.
 >>>malloy
-# dashboard
-run: prison_deaths -> {
-  group_by: yearly is DOD.year
-  aggregate: Numb_deaths 
-  # percent
-    percent_of_all_deaths is total_deaths / all(total_deaths)
-  group_by: DeathCategory
-  where: DeathCategory = 'Cancer'| 'Liver'| 'Pulmonary'| 'Unknown'
-}
 # line_chart
 run: prison_deaths -> {
   group_by: yearly is DOD.year
@@ -150,8 +180,7 @@ run: prison_deaths-> {
 >>>markdown
 ### 6. What are the most common causes of death for male inmates since 2005, broken down by race?
 >>>malloy
---#line_chart
---# bar_chart {size=lg}
+
 # bar_chart {stack size=sm}
 run: prison_deaths-> {
   where: Sex = 'Male'
@@ -160,12 +189,12 @@ run: prison_deaths-> {
   group_by: DOD
   group_by: Race 
     
-  aggregate: 
-   total_deaths 
-  
+  aggregate: total_deaths 
 }
 >>>markdown
 ### 7. What percentage of all deaths does each death category represent?
+>>>markdown
+###. The data summarizes inmate deaths by race, sex, and percentage of total deaths. White male inmates account for the highest proportion of deaths at 50.61% (1,081 deaths), followed by Black males at 25% (534 deaths) and White-Hispanic males at 15.54% (332 deaths). Female deaths make up a significantly smaller portion, with White females at 2.29% (49 deaths) and Black females at 0.94% (20 deaths). Other racial and gender groups, such as Native American males (2.15%) and Asian males (1.22%), have lower death counts. The data highlights racial and gender disparities in inmate mortality, with a strong male predominance in deaths across all groups.
 >>>malloy
 # dashboard
 --# bar_chart
@@ -188,6 +217,7 @@ aggregate:
 
 Additionally, identify the months and quarters with the lowest number of deaths in specific categories.
 >>>malloy
+--# bar_chart
 run: prison_deaths -> {
   group_by: DOD.year, DeathCategory
   aggregate: total_records
@@ -210,13 +240,15 @@ run: prison_deaths -> {
   order_by: total_records desc
 }
 >>>markdown
-### 9. What are the top 10 death categories and their gender breakdowns?
+### 9. What are the top 3 death categories and their gender breakdowns?
+>>>markdown
+###, The graph presents the top causes of death among federal inmates, highlighting Cancer (2,136 deaths), Cardiac-related deaths (2,045 deaths), and Pulmonary-related deaths (916 deaths) as the leading categories. The data is further broken down by sex, showing the distribution of deaths between male and female inmates. The visualization helps identify trends in mortality within the prison system, emphasizing the most prevalent health conditions contributing to inmate deaths.
 >>>malloy
 run: prison_deaths -> {
   
   group_by: DeathCategory
   aggregate: total_deaths
-  top: 10
+  top: 3
   # bar_chart.size=sm
   nest: `by_category` is {
     group_by: Sex
@@ -228,7 +260,7 @@ run: prison_deaths -> {
   
   group_by: DeathCategory
   aggregate: total_deaths
-  top: 10
+  top: 3
   # bar_chart {y.independent}
   nest: `by_category` is {
     group_by: Sex
@@ -600,18 +632,18 @@ run: prison_deaths -> {
     group_by: Place.Location_Code
 }
 >>>markdown
-### 40. Can you visualize the breakdown of deaths by category, with a specific focus on last names and races for the top 10 records?
+### 40. Can you visualize the breakdown of deaths by category, with a specific focus on last names and races for the top 5 records?
 >>>markdown
 add a dashboard layout
 a dashboard typically refers to a visualization setup where multiple queries, charts, or tables are displayed together to provide insights.
 A dashboard makes it easier to understand data results by visually organizing key insights using charts, graphs, and tables instead of just raw numbers. It helps users quickly analyze trends, compare metrics, and make data-driven decisions.
 >>>malloy
-# dashboard
+--# dashboard
 run: prison_deaths -> {
   
   group_by: DeathCategory, RegisterNum, Sex
   aggregate: total_deaths
-  top: 10
+  top: 5
   # bar_chart {y.independent}
   nest: `by_category` is {
     group_by: Last_Name, Race
@@ -656,6 +688,7 @@ run: prison_deaths -> {
   group_by: DOD.year, DeathCategory, Race, Sex
   aggregate: total_records is count()
   order_by: total_records desc
+  limit:3
 
   # bar_chart {x: DOD.year, y: total_records, color: DeathCategory}
 
@@ -677,12 +710,14 @@ run: prison_deaths -> {
   group_by: DOD.year, DeathCategory, Race, Sex, categories.icd_code, categories.icd_description
   aggregate: total_records is count()
   order_by: total_records desc
+  limit: 2
 
 # bar_chart {x: ICD10P, y: total_icd_deaths, color: ICD10S}
 nest: by_icd_codes is {
     group_by: ICD10P, ICD10S
     aggregate: total_icd_deaths is count()
     order_by: total_icd_deaths desc
+    limit: 2
   }
 }
 >>>markdown
@@ -699,6 +734,7 @@ run: prison_deaths -> {
 >>>markdown
 ### 46. In 2024, the number of deaths was 235. During the COVID-19 period in 2020, the number of deaths peaked at 561.
 >>>malloy
+# line_chart
 run: prison_deaths -> {
   group_by: DOD.year 
   aggregate: Numb_deaths 
