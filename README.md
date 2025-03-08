@@ -33,7 +33,7 @@ This project leverages **Malloy** for querying and analyzing the data. Various v
 
 Below are some notable findings from the analysis.
 
-## Grouping By Key Demongraphic and Death-Related Attributes.
+### Grouping By Key Demongraphic and Death-Related Attributes.
 
 - Dataset Overview: Summarizes inmate deaths by cause, race, and sex, providing insights into health trends within the federal prison system.
 
@@ -58,7 +58,7 @@ Below are some notable findings from the analysis.
 
 <img src="./Images/grouping.png" width="50%">
 
-## This dataset provides insights into federal inmate deaths by institution, cause, and year, highlighting the facilities with the highest mortality rates and the most common causes of death. BUH (1,840 deaths) recorded the highest number of deaths, followed by SPG (578) and DEV (322), suggesting that certain institutions house higher-risk or terminally ill inmates. The leading causes of death include cardiac arrest (I46 - 344 deaths), liver cancer (C22 - 159 deaths), and colon cancer (C18 - 143 deaths). Suicide by hanging (X70 - 180 deaths) and COVID-19 (U07.1 - 266 deaths) also account for a significant portion of deaths. The presence of 477 deaths with unknown ICD-10 classifications (UNK) indicates possible gaps in cause-of-death reporting. This data underscores the health risks, chronic conditions, and systemic challenges contributing to mortality in the federal prison system.
+### This dataset provides insights into federal inmate deaths by institution, cause, and year, highlighting the facilities with the highest mortality rates and the most common causes of death. BUH (1,840 deaths) recorded the highest number of deaths, followed by SPG (578) and DEV (322), suggesting that certain institutions house higher-risk or terminally ill inmates. The leading causes of death include cardiac arrest (I46 - 344 deaths), liver cancer (C22 - 159 deaths), and colon cancer (C18 - 143 deaths). Suicide by hanging (X70 - 180 deaths) and COVID-19 (U07.1 - 266 deaths) also account for a significant portion of deaths. The presence of 477 deaths with unknown ICD-10 classifications (UNK) indicates possible gaps in cause-of-death reporting. This data underscores the health risks, chronic conditions, and systemic challenges contributing to mortality in the federal prison system.
 
 - Dataset Overview: Provides insights into federal inmate deaths by institution, cause, and year, identifying facilities with the highest mortality rates.
 
@@ -86,7 +86,7 @@ Below are some notable findings from the analysis.
 
 <img src="./Images/cause.png" width="50%">
 
-## This graph illustrates yearly inmate deaths from 2012 to 2023, categorized by Pulmonary, Cancer, Liver, and Unknown causes. Cancer-related deaths consistently remain the highest, followed by Pulmonary and Liver diseases, indicating that chronic illnesses are major contributors to inmate mortality. A significant spike in deaths occurred in 2020, likely due to COVID-19 and other health complications. The Unknown category suggests gaps in medical reporting or classification. Overall, the data highlights long-term health challenges in the prison system, emphasizing the need for improved medical care and disease prevention strategies.
+### This graph illustrates yearly inmate deaths from 2012 to 2023, categorized by Pulmonary, Cancer, Liver, and Unknown causes. Cancer-related deaths consistently remain the highest, followed by Pulmonary and Liver diseases, indicating that chronic illnesses are major contributors to inmate mortality. A significant spike in deaths occurred in 2020, likely due to COVID-19 and other health complications. The Unknown category suggests gaps in medical reporting or classification. Overall, the data highlights long-term health challenges in the prison system, emphasizing the need for improved medical care and disease prevention strategies.
 
 - Graph Overview: Displays yearly inmate deaths from 2012 to 2023, categorized by Pulmonary, Cancer, Liver, and Unknown causes.
 
@@ -106,7 +106,7 @@ Below are some notable findings from the analysis.
 
 <img src="./Images/Death.png" width="50%">
 
-## The data summarizes inmate deaths by race, sex, and percentage of total deaths. White male inmates account for the highest proportion of deaths at 50.61% (1,081 deaths), followed by Black males at 25% (534 deaths) and White-Hispanic males at 15.54% (332 deaths). Female deaths make up a significantly smaller portion, with White females at 2.29% (49 deaths) and Black females at 0.94% (20 deaths). Other racial and gender groups, such as Native American males (2.15%) and Asian males (1.22%), have lower death counts. The data highlights racial and gender disparities in inmate mortality, with a strong male predominance in deaths across all groups.
+### The data summarizes inmate deaths by race, sex, and percentage of total deaths. White male inmates account for the highest proportion of deaths at 50.61% (1,081 deaths), followed by Black males at 25% (534 deaths) and White-Hispanic males at 15.54% (332 deaths). Female deaths make up a significantly smaller portion, with White females at 2.29% (49 deaths) and Black females at 0.94% (20 deaths). Other racial and gender groups, such as Native American males (2.15%) and Asian males (1.22%), have lower death counts. The data highlights racial and gender disparities in inmate mortality, with a strong male predominance in deaths across all groups.
 
 - Dataset Overview: Summarizes inmate deaths by race, sex, and percentage of total deaths.
 
@@ -129,7 +129,7 @@ Below are some notable findings from the analysis.
 
 <img src="./Images/cattegory.png" width="50%">
 
-## The graph presents the top causes of death among federal inmates, highlighting Cancer (2,136 deaths), Cardiac-related deaths (2,045 deaths), and Pulmonary-related deaths (916 deaths) as the leading categories. The data is further broken down by sex, showing the distribution of deaths between male and female inmates. The visualization helps identify trends in mortality within the prison system, emphasizing the most prevalent health conditions contributing to inmate deaths.
+### The graph presents the top causes of death among federal inmates, highlighting Cancer (2,136 deaths), Cardiac-related deaths (2,045 deaths), and Pulmonary-related deaths (916 deaths) as the leading categories. The data is further broken down by sex, showing the distribution of deaths between male and female inmates. The visualization helps identify trends in mortality within the prison system, emphasizing the most prevalent health conditions contributing to inmate deaths.
 
 - Graph Overview: Displays the top causes of death among federal inmates.
 
