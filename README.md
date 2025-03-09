@@ -36,7 +36,7 @@ Below are some key findings from the analysis, presented in a clear and easy-to-
 1. Grouping By Key Demongraphic and Death-Related Attributes.
 
    <img src="./Images/grouping.png" width="50%">
-   <p align="center">
+   
    Figure: Grouping By Demongraphic
             
 #### Below is a breakdown of the data results, making it easier to understand the dataset presented in the above figure.
