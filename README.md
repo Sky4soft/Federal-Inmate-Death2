@@ -31,10 +31,11 @@ After analyzing the dataset, several key insights emerged:
 ## Visualizations & Analysis  
 This project leverages **Malloy** for querying and analyzing the data. Various visualizations, including **bar charts and line graphs**, are used to enhance data interpretation.  
 
-#### Below are some key findings from the analysis, presented in a concise and easy-to-understand for dataset summarize.
-
 1. Grouping By Key Demongraphic and Death-Related Attributes.
 
+<img src="./Images/grouping.png" width="50%">
+
+#### Below are some key findings from the analysis, presented in a concise and easy-to-understand for dataset summarize.
 - Dataset Overview: Summarizes inmate deaths by cause, race, and sex, providing insights into health trends within the federal prison system.
 
 - Leading Causes of Death:
@@ -55,8 +56,6 @@ This project leverages **Malloy** for querying and analyzing the data. Various v
 
     Findings highlight healthcare challenges and risk factors contributing to inmate mortality.
     Suggests the need for improved medical care and mental health support in federal prisons.
-
-<img src="./Images/grouping.png" width="50%">
 
 2. This dataset provides insights into federal inmate deaths by institution, cause, and year, highlighting the facilities with the highest mortality rates and the most common causes of death. BUH (1,840 deaths) recorded the highest number of deaths, followed by SPG (578) and DEV (322), suggesting that certain institutions house higher-risk or terminally ill inmates. The leading causes of death include cardiac arrest (I46 - 344 deaths), liver cancer (C22 - 159 deaths), and colon cancer (C18 - 143 deaths). Suicide by hanging (X70 - 180 deaths) and COVID-19 (U07.1 - 266 deaths) also account for a significant portion of deaths. The presence of 477 deaths with unknown ICD-10 classifications (UNK) indicates possible gaps in cause-of-death reporting. This data underscores the health risks, chronic conditions, and systemic challenges contributing to mortality in the federal prison system.
 
