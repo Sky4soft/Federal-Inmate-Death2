@@ -168,6 +168,10 @@ Below are some key findings from the analysis, presented in a clear and easy-to-
     - Identifies mortality trends within the prison system.
     - Emphasizes the need for better healthcare and prevention measures in federal facilities.
 
+Conclusion
+
+The analysis of federal inmate death data provides critical insights into the health risks and mortality trends within the prison system. The findings highlight key issues, including the prevalence of cardiac conditions and cancer as leading causes of death, racial and gender disparities in mortality rates, and the role of specific institutions in inmate healthcare outcomes.
+
 ## Data Sources  
 The dataset includes records of federal inmate deaths, providing details such as:  
 - **Date of Death (DOD)**  
