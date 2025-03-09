@@ -66,7 +66,7 @@ Below are some key findings from the analysis, presented in a clear and easy-to-
 
    <img src="./Images/cause.png" width="50%">
    
-            Figure: Insights into Federal Inmate Deaths By Institution
+   Figure: Insights into Federal Inmate Deaths By Institution
             
 #### Below is a breakdown of the data results, making it easier to understand the dataset presented in the above figure.
 
@@ -98,7 +98,7 @@ Below are some key findings from the analysis, presented in a clear and easy-to-
 
    <img src="./Images/Death.png" width="70%">
    
-            Figure: Inmate Deaths Categorized
+   Figure: Inmate Deaths Categorized
             
 #### Below is a breakdown of the data results, making it easier to understand the dataset presented in the above figure.
 
@@ -122,7 +122,7 @@ Below are some key findings from the analysis, presented in a clear and easy-to-
 
    <img src="./Images/cattegory.png" width="50%">
    
-            Figure:Inmate Death
+   Figure:Inmate Death
             
 #### Below is a breakdown of the data results, making it easier to understand the dataset presented in the above figure.
 
@@ -149,7 +149,7 @@ Below are some key findings from the analysis, presented in a clear and easy-to-
 
    <img src="./Images/topcause.png" width="50%">
    
-               Figure: Screenshot of the top causes of death.
+   Figure: Screenshot of the top causes of death.
     
 #### Below is a breakdown of the data results, making it easier to understand the dataset presented in the above figure.
 
